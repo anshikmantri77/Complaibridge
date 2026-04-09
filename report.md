@@ -1,36 +1,41 @@
-# Computer Vision Diagram Understanding Report
+# Technical Architecture Diagram Analysis Report
 
 ## 1. Toolkits and Models Choice
-The solution utilizes the following core technologies:
-- **OpenCV (Open Source Computer Vision Library):** Used for image preprocessing, geometric shape detection (contours, rectangles), and morphological operations to isolate lines and arrows.
-- **EasyOCR:** Selected for text extraction due to its robustness in recognizing text within structured diagrams and its ability to return precise bounding boxes. It uses a CRAFT text detector and a CRNN recognition model.
-- **NumPy:** Used for efficient array manipulations during image masking and geometric calculations.
-- **Python's standard JSON library:** For exporting the structured logical graph.
+The pipeline leverages a combination of deep learning and geometric computer vision:
+- **EasyOCR (CRAFT + CRNN):** Chosen for text detection and recognition. CRAFT (Character Region Awareness for Text Detection) is particularly effective for diagrams where text might be isolated or uniquely positioned.
+- **OpenCV:** Forms the backbone of the geometric analysis, managing Canny edge detection, Hough Line Transforms, and bitwise masking.
+- **NetworkX:** Utilized for building and manipulating the topological graph once the vision pipeline extracts endpoints.
+- **Matplotlib:** Used for generating the high-level relationship visualization.
 
-### Rationale
-- **OpenCV** provides low-level control over image feature extraction, which is essential for distinguishing between dashed lines, boxes, and icons.
-- **EasyOCR** is preferred over Tesseract as it handles varied font styles and orientations often found in architecture diagrams more gracefully without extensive configuration.
+### Choice Rationale
+1.  **OCR Robustness:** Architecture diagrams often contain non-standard fonts and small labels sitting on dashed lines. EasyOCR outperforms standard Tesseract in these scenarios.
+2.  **Deterministic Logic:** For structural diagrams, deterministic geometric association (containment and proximity) is preferred over end-to-end black-box models to ensure transparency and debuggability in entity nesting.
 
-## 2. Pipeline Design
-The pipeline follows a sequential multi-stage approach:
+## 2. Advanced Pipeline Design
+The production-grade pipeline implements several non-obvious optimizations:
 
-1.  **Preprocessing:**
-    - The input image is converted to grayscale to reduce dimensionality.
-    - Gaussian blurring is applied to reduce noise for edge detection.
-2.  **Detection & Extraction:**
-    - **OCR Stage:** EasyOCR sweeps the image to identify all text elements and their coordinates.
-    - **Contour Analysis:** Canny edge detection followed by contour approximation (`approxPolyDP`) is used to identify quadrilaterals (grouping boxes).
-    - **Feature Masking:** Once text and boxes are identified, they are masked out to isolate the connecting lines and arrows.
-3.  **Association Strategy:**
-    - A **Geometric Containment** algorithm is used to build hierarchies. Entities (text, icons) are assigned to the smallest containing box.
-    - Boxes are nested using a recursive containment check to reconstruct the architecture's "parent-child" relationships (e.g., Front-end inside Plant An App).
-4.  **Relationship Mapping:**
-    - **Hough Line Transform** detects straight edges representing connections.
-    - The endpoints of these lines are associated with the nearest logical entity to form the directed graph.
-5.  **Output Generation:**
-    - The results are serialized into the requested JSON schema and visualized on an annotated image.
+### A. Entity-Masked Hough Transform
+Standard line detection often fails because box borders (rectangles) generate stronger Hough peaks than internal arrows. The pipeline solves this by **pre-masking**: all detected text and boxes are zeroed out (set to black) before line detection begins, ensuring only true connections remain.
 
-## 3. Trade-offs and Alternative Approaches
-- **Rule-based vs. ML-based Arrow Detection:** While ML models (like YOLO) could be trained to find arrows, a rule-based approach using line endpoints was chosen for this assignment for its speed and lack of requirement for a specialized dataset. However, it may struggle with very complex overlapping lines.
-- **Nested Box Complexity:** The current containment logic assumes boxes are perfectly rectangular and non-overlapping unless they are nested. For diagrams with free-form groupings, a pixel-wise semantic segmentation model (like Detectron2) would be a more robust but computationally expensive alternative.
-- **OCR Accuracy:** Small labels (like "-VPN") can sometimes be missed if the threshold is too high. The pipeline uses a lower probability threshold for OCR to ensure these critical labels are captured, even at the cost of some noise.
+### B. Solid vs. Dashed Line Classification
+We implement a **pixel fill-ratio sampling** algorithm. By sampling 20-50 localized points along a detected line's path in a binary mask, we calculate the ratio of 'on' pixels. 
+- **Ratio > 0.65:** Classified as **Solid**.
+- **Ratio < 0.65:** Classified as **Dashed**.
+This is critical for distinguishing standard flows from specialized tunnels (like VPNs).
+
+### C. Horizontal Token Merging
+OCR often detects "Search UI" as two separate tokens. The pipeline includes a greedy horizontal merging pass that joins adjacent tokens with similar Y-coordinates and minimal X-gaps into single semantic entities.
+
+### D. Multi-Pass Hierarchy Assignment
+1.  **Pass 1:** Analyzes all quadrilaterals to determine group-in-group containment (e.g., Elasticsearch Serverless inside a Region).
+2.  **Pass 2:** Assigns leaf nodes (text, icons) to their tightest-fitting parent container.
+3.  **Label Propagation:** Groups that are unlabeled inherit the semantic name of text identified at their "header" (top boundary).
+
+## 3. Heuristics and Trade-offs
+- **Zone Classification:** A spatial heuristic is used to label top-level groups. Groups on the far left are tagged as "cloud", center-right as "external", and the middle zone as "onprem". This is a lightweight alternative to general scene understanding.
+- **Endpoint Resolution:** Arrows are mapped to entities by calculating the shortest Euclidean distance from the line endpoint to an entity's axis-aligned bounding box (AABB).
+- **Bidirectional Deduplication:** The pipeline recognizes reciprocal relationships (Flow A→B and Flow B→A) and consolidates them into a single bidirectional entity to simplify the resulting graph.
+
+## 4. Future Considerations
+- **Generic Icon Support:** While database cylinders are currently detected via aspect ratio, a small CNN (Convolutional Neural Network) could be integrated to classify a wider range of icons (Compute, Storage, Network).
+- **Flow Directionality:** Currently, arrowheads are inferred by endpoint proximity. A template-matching approach for the 'head' triangle would increase accuracy for arrows that don't terminate exactly on a box border.

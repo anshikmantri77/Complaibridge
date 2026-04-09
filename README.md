@@ -1,33 +1,46 @@
-# Diagram Understanding CV Pipeline
+# Production Architecture Diagram Analysis Pipeline
 
-This project analyzes architecture diagrams and extracts their logical structure into JSON and annotated images.
+A high-fidelity computer vision pipeline designed to analyze architecture diagrams (PNG/JPG) and extract their complete logical structure — including entities, nested hierarchies, icons, and directional relationships.
 
-## Prerequisites
+## 🚀 Key Features
+- **Intelligent Text Processing:** Uses **EasyOCR** with phrase-level token merging for coherent labels.
+- **Robust Entity Detection:** Handles overlapping boxes, rounded corners, and structural groups.
+- **Advanced Relationship Logic:**
+  - **Entity Masking:** Prevents false arrow detections from box borders.
+  - **Line Classification:** Distinguishes between **Solid** and **Dashed** lines (e.g., VPN tunnels).
+  - **Bidirectional Detection:** Automatically merges reciprocal flows into single bidirectional arrows.
+- **Structural Intelligence:**
+  - **Multi-Pass Hierarchy:** Deeply nested containment analysis (e.g., *Service* inside *Cluster* inside *Cloud*).
+  - **Zone Classification:** Heuristic-based labeling (Cloud, On-prem, External).
+  - **Arrow Labeling:** Contextual proximity matching for floating labels (like "-VPN").
+
+## 🛠 Prerequisites
 - Python 3.8+
-- OpenCV-headless (or standard OpenCV)
+- OpenCV
 - EasyOCR
+- NetworkX & Matplotlib (for visualization)
 - NumPy
 
-## Installation
-Install the required dependencies using pip:
-
+## 📥 Installation
+Install dependencies via pip:
 ```bash
-pip install opencv-python easyocr numpy matplotlib
+pip install -r requirements.txt
 ```
 
-## How to Run
-
-1.  **Input:** Place your diagram image in the `input/` directory and name it `diagram.png`.
-2.  **Execute:** Run the analyzer script:
+## 🏃 How to Run
+1.  **Input:** Place your architecture diagram in `input/diagram.png`.
+2.  **Execute:**
     ```bash
     python src/processor.py
     ```
-3.  **Output:**
-    - `output/structure.json`: The logically reconstructed graph.
-    - `output/annotated_diagram.png`: The original image with detection overlays.
+3.  **Outputs:**
+    - `output/structure.json`: The fully structured logical graph.
+    - `output/annotated_diagram.png`: Visualization of detected bounding boxes and relationships.
+    - `output/relationship_graph.png`: NetworkX-generated topological visualization.
 
-## Project Structure
-- `src/processor.py`: The core computer vision logic.
-- `input/`: Directory for input images.
-- `output/`: Directory where results are saved.
-- `report.md`: Technical report on the pipeline design.
+## 📁 Project Structure
+- `src/processor.py`: Unified production pipeline.
+- `input/`: Standard input directory.
+- `output/`: Processed results and visualizations.
+- `requirements.txt`: Pinned dependency versions.
+- `report.md`: Detailed technical analysis.
