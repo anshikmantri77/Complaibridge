@@ -1,1423 +1,799 @@
 {
   "entities": [
     {
-      "id": "node_1",
+      "id": "group_1",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.92,
+      "bounding_box": {
+        "x": 867,
+        "y": 84,
+        "w": 373,
+        "h": 294
+      },
+      "parent_id": null,
+      "children": [
+        "group_7",
+        "group_2"
+      ],
+      "zone_hint": "external"
+    },
+    {
+      "id": "group_2",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.88,
+      "bounding_box": {
+        "x": 885,
+        "y": 123,
+        "w": 349,
+        "h": 251
+      },
+      "parent_id": "group_1",
+      "children": [
+        "group_3",
+        "group_5"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_3",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.81,
+      "bounding_box": {
+        "x": 902,
+        "y": 193,
+        "w": 147,
+        "h": 103
+      },
+      "parent_id": "group_2",
+      "children": [
+        "group_4"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_4",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.98,
+      "bounding_box": {
+        "x": 918,
+        "y": 199,
+        "w": 106,
+        "h": 91
+      },
+      "parent_id": "group_3",
+      "children": [
+        "text_42"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_5",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.72,
+      "bounding_box": {
+        "x": 1081,
+        "y": 172,
+        "w": 138,
+        "h": 123
+      },
+      "parent_id": "group_2",
+      "children": [
+        "group_6"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_6",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.98,
+      "bounding_box": {
+        "x": 1107,
+        "y": 199,
+        "w": 106,
+        "h": 90
+      },
+      "parent_id": "group_5",
+      "children": [
+        "text_43"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_7",
+      "type": "group",
+      "label": "Elasticsearch Serverless",
+      "confidence": 0.98,
+      "bounding_box": {
+        "x": 940,
+        "y": 90,
+        "w": 239,
+        "h": 61
+      },
+      "parent_id": "group_1",
+      "children": [
+        "group_8",
+        "text_35"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_8",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.64,
+      "bounding_box": {
+        "x": 947,
+        "y": 94,
+        "w": 48,
+        "h": 52
+      },
+      "parent_id": "group_7",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "group_9",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.86,
+      "bounding_box": {
+        "x": 568,
+        "y": 81,
+        "w": 286,
+        "h": 300
+      },
+      "parent_id": null,
+      "children": [
+        "group_13",
+        "group_11"
+      ],
+      "zone_hint": "onprem"
+    },
+    {
+      "id": "group_10",
+      "type": "group",
+      "label": "docker",
+      "confidence": 0.69,
+      "bounding_box": {
+        "x": 599,
+        "y": 197,
+        "w": 139,
+        "h": 94
+      },
+      "parent_id": "group_11",
+      "children": [
+        "text_38",
+        "text_41",
+        "text_45"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_11",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.64,
+      "bounding_box": {
+        "x": 587,
+        "y": 123,
+        "w": 253,
+        "h": 252
+      },
+      "parent_id": "group_9",
+      "children": [
+        "group_12",
+        "group_10",
+        "text_48"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_12",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.73,
+      "bounding_box": {
+        "x": 766,
+        "y": 267,
+        "w": 51,
+        "h": 78
+      },
+      "parent_id": "group_11",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "group_13",
+      "type": "group",
+      "label": "On-prem hardware",
+      "confidence": 0.98,
+      "bounding_box": {
+        "x": 638,
+        "y": 87,
+        "w": 151,
+        "h": 62
+      },
+      "parent_id": "group_9",
+      "children": [
+        "text_34"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_14",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.92,
+      "bounding_box": {
+        "x": 9,
+        "y": 4,
+        "w": 540,
+        "h": 383
+      },
+      "parent_id": null,
+      "children": [
+        "group_30",
+        "group_15",
+        "text_46"
+      ],
+      "zone_hint": "cloud"
+    },
+    {
+      "id": "group_15",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.93,
+      "bounding_box": {
+        "x": 15,
+        "y": 43,
+        "w": 515,
+        "h": 338
+      },
+      "parent_id": "group_14",
+      "children": [
+        "group_16"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_16",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.92,
+      "bounding_box": {
+        "x": 27,
+        "y": 81,
+        "w": 490,
+        "h": 276
+      },
+      "parent_id": "group_15",
+      "children": [
+        "group_26",
+        "group_17"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_17",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.91,
+      "bounding_box": {
+        "x": 33,
+        "y": 121,
+        "w": 473,
+        "h": 230
+      },
+      "parent_id": "group_16",
+      "children": [
+        "group_18",
+        "group_19",
+        "group_22",
+        "text_36",
+        "text_37",
+        "text_47"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_18",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.7,
+      "bounding_box": {
+        "x": 418,
+        "y": 239,
+        "w": 76,
+        "h": 62
+      },
+      "parent_id": "group_17",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "group_19",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.92,
+      "bounding_box": {
+        "x": 49,
+        "y": 170,
+        "w": 129,
+        "h": 140
+      },
+      "parent_id": "group_17",
+      "children": [
+        "group_21"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_20",
+      "type": "group",
+      "label": "Search U",
+      "confidence": 0.49,
+      "bounding_box": {
+        "x": 77,
+        "y": 230,
+        "w": 73,
+        "h": 29
+      },
+      "parent_id": "group_21",
+      "children": [
+        "text_39"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_21",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.7,
+      "bounding_box": {
+        "x": 55,
+        "y": 197,
+        "w": 117,
+        "h": 107
+      },
+      "parent_id": "group_19",
+      "children": [
+        "group_20"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_22",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.82,
+      "bounding_box": {
+        "x": 215,
+        "y": 169,
+        "w": 181,
+        "h": 141
+      },
+      "parent_id": "group_17",
+      "children": [
+        "group_25"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_23",
+      "type": "group",
+      "label": "Client",
+      "confidence": 0.73,
+      "bounding_box": {
+        "x": 243,
+        "y": 242,
+        "w": 106,
+        "h": 33
+      },
+      "parent_id": "group_25",
+      "children": [
+        "text_44"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_24",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.79,
+      "bounding_box": {
+        "x": 243,
+        "y": 214,
+        "w": 106,
+        "h": 22
+      },
+      "parent_id": "group_25",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "group_25",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.45,
+      "bounding_box": {
+        "x": 221,
+        "y": 196,
+        "w": 150,
+        "h": 108
+      },
+      "parent_id": "group_22",
+      "children": [
+        "group_24",
+        "group_23",
+        "text_40"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_26",
+      "type": "group",
+      "label": "Plant An App AWS",
+      "confidence": 0.98,
+      "bounding_box": {
+        "x": 153,
+        "y": 87,
+        "w": 239,
+        "h": 62
+      },
+      "parent_id": "group_16",
+      "children": [
+        "group_27",
+        "group_28",
+        "text_merged_49"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_27",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.66,
+      "bounding_box": {
+        "x": 225,
+        "y": 109,
+        "w": 94,
+        "h": 20
+      },
+      "parent_id": "group_26",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "group_28",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.79,
+      "bounding_box": {
+        "x": 156,
+        "y": 90,
+        "w": 56,
+        "h": 55
+      },
+      "parent_id": "group_26",
+      "children": [
+        "group_29"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "group_29",
+      "type": "group",
+      "label": "Region",
+      "confidence": 0.34,
+      "bounding_box": {
+        "x": 160,
+        "y": 94,
+        "w": 48,
+        "h": 42
+      },
+      "parent_id": "group_28",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "group_30",
+      "type": "group",
+      "label": "Server Website",
+      "confidence": 0.98,
+      "bounding_box": {
+        "x": 150,
+        "y": 10,
+        "w": 239,
+        "h": 61
+      },
+      "parent_id": "group_14",
+      "children": [
+        "text_31"
+      ],
+      "zone_hint": null
+    },
+    {
+      "id": "text_31",
       "type": "text",
       "label": "Server Website",
+      "confidence": 0.94,
       "bounding_box": {
         "x": 223,
         "y": 33,
         "w": 94,
         "h": 16
       },
-      "parent_id": "node_28",
-      "children": []
+      "parent_id": "group_30",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_2",
+      "id": "text_merged_49",
       "type": "text",
-      "label": "Plant An App",
+      "label": "Plant An App AWS",
+      "confidence": 0.99,
       "bounding_box": {
         "x": 225,
         "y": 109,
-        "w": 96,
+        "w": 144,
         "h": 20
       },
-      "parent_id": "node_27",
-      "children": []
+      "parent_id": "group_26",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_3",
-      "type": "text",
-      "label": "AWS",
-      "bounding_box": {
-        "x": 329,
-        "y": 109,
-        "w": 40,
-        "h": 18
-      },
-      "parent_id": "node_27",
-      "children": []
-    },
-    {
-      "id": "node_4",
+      "id": "text_34",
       "type": "text",
       "label": "On-prem hardware",
+      "confidence": 1.0,
       "bounding_box": {
         "x": 657,
         "y": 111,
         "w": 114,
         "h": 16
       },
-      "parent_id": "node_26",
-      "children": []
+      "parent_id": "group_13",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_5",
+      "id": "text_35",
       "type": "text",
       "label": "Elasticsearch Serverless",
+      "confidence": 0.72,
       "bounding_box": {
         "x": 1001,
         "y": 113,
         "w": 174,
         "h": 18
       },
-      "parent_id": "node_25",
-      "children": []
+      "parent_id": "group_7",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_6",
+      "id": "text_36",
       "type": "text",
       "label": "Front-End",
+      "confidence": 1.0,
       "bounding_box": {
         "x": 66,
         "y": 168,
         "w": 94,
         "h": 24
       },
-      "parent_id": null,
-      "children": []
+      "parent_id": "group_17",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_7",
+      "id": "text_37",
       "type": "text",
       "label": "Back-End",
+      "confidence": 0.96,
       "bounding_box": {
         "x": 250,
         "y": 168,
         "w": 92,
         "h": 24
       },
-      "parent_id": null,
-      "children": []
+      "parent_id": "group_17",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_8",
+      "id": "text_38",
       "type": "text",
       "label": "docker",
+      "confidence": 0.99,
       "bounding_box": {
         "x": 599,
         "y": 223,
         "w": 46,
         "h": 14
       },
-      "parent_id": "node_21",
-      "children": []
+      "parent_id": "group_10",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_9",
-      "type": "text",
-      "label": "Search U",
-      "bounding_box": {
-        "x": 79,
-        "y": 237,
-        "w": 66,
-        "h": 16
-      },
-      "parent_id": "node_22",
-      "children": []
-    },
-    {
-      "id": "node_10",
+      "id": "text_40",
       "type": "text",
       "label": "Elastic Language",
+      "confidence": 0.93,
       "bounding_box": {
         "x": 245,
         "y": 231,
         "w": 104,
         "h": 16
       },
-      "parent_id": "node_24",
-      "children": []
+      "parent_id": "group_25",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_11",
-      "type": "text",
-      "label": "Elastic Connector for",
-      "bounding_box": {
-        "x": 605,
-        "y": 236,
-        "w": 128,
-        "h": 18
-      },
-      "parent_id": "node_21",
-      "children": []
-    },
-    {
-      "id": "node_12",
-      "type": "text",
-      "label": "Indices",
-      "bounding_box": {
-        "x": 949,
-        "y": 237,
-        "w": 46,
-        "h": 16
-      },
-      "parent_id": "node_19",
-      "children": []
-    },
-    {
-      "id": "node_13",
+      "id": "text_43",
       "type": "text",
       "label": "ELSER Model",
+      "confidence": 0.66,
       "bounding_box": {
         "x": 1115,
         "y": 235,
         "w": 86,
         "h": 18
       },
-      "parent_id": "node_20",
-      "children": []
+      "parent_id": "group_6",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_14",
+      "id": "text_41",
+      "type": "text",
+      "label": "Elastic Connector for",
+      "confidence": 0.8,
+      "bounding_box": {
+        "x": 605,
+        "y": 236,
+        "w": 128,
+        "h": 18
+      },
+      "parent_id": "group_10",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "text_39",
+      "type": "text",
+      "label": "Search U",
+      "confidence": 1.0,
+      "bounding_box": {
+        "x": 79,
+        "y": 237,
+        "w": 66,
+        "h": 16
+      },
+      "parent_id": "group_20",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "text_42",
+      "type": "text",
+      "label": "Indices",
+      "confidence": 1.0,
+      "bounding_box": {
+        "x": 949,
+        "y": 237,
+        "w": 46,
+        "h": 16
+      },
+      "parent_id": "group_4",
+      "children": [],
+      "zone_hint": null
+    },
+    {
+      "id": "text_44",
       "type": "text",
       "label": "Client",
+      "confidence": 1.0,
       "bounding_box": {
         "x": 279,
         "y": 247,
         "w": 38,
         "h": 14
       },
-      "parent_id": "node_24",
-      "children": []
+      "parent_id": "group_23",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_15",
+      "id": "text_45",
       "type": "text",
       "label": "MS SQL",
+      "confidence": 1.0,
       "bounding_box": {
         "x": 639,
         "y": 251,
         "w": 56,
         "h": 18
       },
-      "parent_id": "node_21",
-      "children": []
+      "parent_id": "group_10",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_16",
+      "id": "text_46",
       "type": "text",
       "label": "VPN",
+      "confidence": 1.0,
       "bounding_box": {
         "x": 519,
         "y": 265,
         "w": 30,
         "h": 14
       },
-      "parent_id": null,
-      "children": []
+      "parent_id": "group_14",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_17",
+      "id": "text_47",
       "type": "text",
       "label": "Database",
+      "confidence": 0.51,
       "bounding_box": {
         "x": 413,
         "y": 305,
         "w": 82,
         "h": 20
       },
-      "parent_id": null,
-      "children": []
+      "parent_id": "group_17",
+      "children": [],
+      "zone_hint": null
     },
     {
-      "id": "node_18",
+      "id": "text_48",
       "type": "text",
       "label": "DB",
+      "confidence": 1.0,
       "bounding_box": {
         "x": 783,
         "y": 349,
         "w": 22,
         "h": 16
       },
-      "parent_id": null,
-      "children": []
-    },
-    {
-      "id": "node_19",
-      "type": "group",
-      "label": "Region",
-      "bounding_box": {
-        "x": 916,
-        "y": 198,
-        "w": 109,
-        "h": 93
-      },
-      "parent_id": null,
-      "children": [
-        "node_12"
-      ]
-    },
-    {
-      "id": "node_20",
-      "type": "group",
-      "label": "Region",
-      "bounding_box": {
-        "x": 1106,
-        "y": 197,
-        "w": 109,
-        "h": 94
-      },
-      "parent_id": null,
-      "children": [
-        "node_13"
-      ]
-    },
-    {
-      "id": "node_21",
-      "type": "group",
-      "label": "docker",
-      "bounding_box": {
-        "x": 597,
-        "y": 195,
-        "w": 143,
-        "h": 98
-      },
-      "parent_id": null,
-      "children": [
-        "node_8",
-        "node_11",
-        "node_15"
-      ]
-    },
-    {
-      "id": "node_22",
-      "type": "group",
-      "label": "Region",
-      "bounding_box": {
-        "x": 51,
-        "y": 193,
-        "w": 125,
-        "h": 115
-      },
-      "parent_id": null,
-      "children": [
-        "node_9"
-      ]
-    },
-    {
-      "id": "node_23",
-      "type": "group",
-      "label": "Region",
-      "bounding_box": {
-        "x": 220,
-        "y": 194,
-        "w": 153,
-        "h": 112
-      },
-      "parent_id": null,
-      "children": [
-        "node_24"
-      ]
-    },
-    {
-      "id": "node_24",
-      "type": "group",
-      "label": "Elastic Language",
-      "bounding_box": {
-        "x": 239,
-        "y": 210,
-        "w": 114,
-        "h": 70
-      },
-      "parent_id": "node_23",
-      "children": [
-        "node_10",
-        "node_14"
-      ]
-    },
-    {
-      "id": "node_25",
-      "type": "group",
-      "label": "Elasticsearch Serverless",
-      "bounding_box": {
-        "x": 936,
-        "y": 85,
-        "w": 247,
-        "h": 71
-      },
-      "parent_id": null,
-      "children": [
-        "node_5"
-      ]
-    },
-    {
-      "id": "node_26",
-      "type": "group",
-      "label": "On-prem hardware",
-      "bounding_box": {
-        "x": 633,
-        "y": 83,
-        "w": 160,
-        "h": 70
-      },
-      "parent_id": null,
-      "children": [
-        "node_4"
-      ]
-    },
-    {
-      "id": "node_27",
-      "type": "group",
-      "label": "AWS",
-      "bounding_box": {
-        "x": 149,
-        "y": 83,
-        "w": 247,
-        "h": 70
-      },
-      "parent_id": null,
-      "children": [
-        "node_2",
-        "node_3"
-      ]
-    },
-    {
-      "id": "node_28",
-      "type": "group",
-      "label": "Server Website",
-      "bounding_box": {
-        "x": 146,
-        "y": 6,
-        "w": 247,
-        "h": 70
-      },
-      "parent_id": null,
-      "children": [
-        "node_1"
-      ]
+      "parent_id": "group_11",
+      "children": [],
+      "zone_hint": null
     }
   ],
   "relationships": [
     {
-      "from": "node_6",
-      "to": "node_22",
+      "from": "group_9",
+      "to": "group_1",
       "direction": "unidirectional",
-      "style": "solid",
+      "style": "dashed",
       "label": null
     },
     {
-      "from": "node_6",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_28",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_19",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_28",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_28",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_27",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_17",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_19",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_17",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_17",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_17",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_6",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_19",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_16",
-      "to": "node_19",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_18",
-      "to": "node_26",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_19",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_6",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_18",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_20",
-      "to": "node_13",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_8",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_15",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_14",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_15",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_18",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_2",
-      "to": "node_3",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_8",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_16",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_13",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_11",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_27",
-      "to": "node_3",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_11",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_13",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_11",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_15",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_4",
-      "to": "node_26",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_28",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_4",
-      "to": "node_26",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_10",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_5",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_26",
-      "to": "node_4",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_14",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_16",
-      "to": "node_17",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_9",
-      "to": "node_22",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_12",
-      "to": "node_19",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_4",
-      "to": "node_26",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_6",
-      "to": "node_22",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_20",
-      "to": "node_13",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_26",
-      "to": "node_4",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_2",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_8",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_18",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_11",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_2",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_12",
-      "to": "node_19",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_4",
-      "to": "node_26",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_10",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_27",
-      "to": "node_2",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_18",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_5",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_18",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_1",
-      "to": "node_28",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_5",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_9",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_6",
-      "to": "node_22",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_4",
-      "to": "node_26",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_1",
-      "to": "node_28",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_13",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_14",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_5",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_18",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_1",
-      "to": "node_28",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_20",
-      "to": "node_13",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_15",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_16",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_11",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_16",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_11",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_10",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_27",
-      "to": "node_2",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_15",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_10",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_12",
-      "to": "node_19",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_17",
-      "to": "node_16",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_10",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_15",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_3",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_14",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_3",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_19",
-      "to": "node_12",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_6",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_27",
-      "to": "node_2",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_11",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_28",
-      "to": "node_1",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_8",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_15",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_21",
-      "to": "node_11",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_13",
-      "to": "node_20",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_7",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_3",
-      "to": "node_27",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_12",
-      "to": "node_19",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_14",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_8",
-      "to": "node_21",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_26",
-      "to": "node_4",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_14",
-      "to": "node_23",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_23",
-      "to": "node_10",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_27",
-      "to": "node_2",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_25",
-      "to": "node_5",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_15",
-      "to": "node_11",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_22",
-      "to": "node_9",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_5",
-      "to": "node_25",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_9",
-      "to": "node_22",
-      "direction": "unidirectional",
-      "style": "solid",
-      "label": null
-    },
-    {
-      "from": "node_28",
-      "to": "node_1",
+      "from": "group_9",
+      "to": "group_1",
       "direction": "unidirectional",
       "style": "solid",
       "label": null
     }
-  ]
+  ],
+  "metadata": {
+    "image_width": 1248,
+    "image_height": 400,
+    "total_entities": 47,
+    "total_relationships": 2
+  }
 }

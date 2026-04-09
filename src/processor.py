@@ -3,219 +3,383 @@ import numpy as np
 import easyocr
 import json
 import os
-from typing import List, Dict, Any, Tuple
+import math
+from dataclasses import dataclass, field, asdict
+from typing import List, Dict, Any, Optional, Tuple
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# B1. TYPED DATACLASSES
+@dataclass
+class BBox:
+    x: int; y: int; w: int; h: int
+
+    @property
+    def cx(self): return self.x + self.w // 2
+
+    @property
+    def cy(self): return self.y + self.h // 2
+
+    @property
+    def area(self): return self.w * self.h
+
+    def contains(self, other: "BBox") -> bool:
+        return (self.x <= other.x and
+                self.y <= other.y and
+                self.x + self.w >= other.x + other.w and
+                self.y + self.h >= other.y + other.h)
+
+    def to_dict(self):
+        return {"x": self.x, "y": self.y, "w": self.w, "h": self.h}
+
+@dataclass
+class Entity:
+    id: str
+    type: str           # "group" | "text" | "icon"
+    label: str
+    bbox: BBox
+    confidence: float = 1.0
+    parent_id: Optional[str] = None
+    children: list = field(default_factory=list)
+    zone_hint: Optional[str] = None
+
+@dataclass
+class Relationship:
+    from_id: str
+    to_id: str
+    direction: str      # "unidirectional" | "bidirectional"
+    style: str          # "solid" | "dashed"
+    label: Optional[str] = None
 
 class DiagramAnalyzer:
-    def __init__(self, workspace_root: str):
-        self.workspace_root = workspace_root
-        self.input_path = os.path.join(workspace_root, "input", "diagram.png")
-        self.output_dir = os.path.join(workspace_root, "output")
-        
-        self.image = cv2.imread(self.input_path)
+    def __init__(self, img_path: str, output_dir: str):
+        self.img_path = img_path
+        self.output_dir = output_dir
+        self.image = cv2.imread(img_path)
         if self.image is None:
-            raise ValueError(f"Could not load image at {self.input_path}")
-        
+            raise ValueError(f"Could not load image at {img_path}")
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-        # Use CPU for OCR to avoid CUDA issues in this environment
         self.reader = easyocr.Reader(['en'], gpu=False)
-        self.entities = []
-        self.relationships = []
+        self.entities: List[Entity] = []
+        self.relationships: List[Relationship] = []
         self.id_counter = 0
+        self.id_map: Dict[str, Entity] = {}
 
-    def generate_id(self):
+    def generate_id(self, prefix="ent"):
         self.id_counter += 1
-        return f"node_{self.id_counter}"
+        return f"{prefix}_{self.id_counter}"
 
-    def detect_entities(self):
-        print("Starting Detection & Extraction...")
-        
-        # 1. OCR for text elements
-        print("Running OCR...")
-        ocr_results = self.reader.readtext(self.image)
-        for (bbox, text, prob) in ocr_results:
-            if prob < 0.3: continue
-            x_min = int(min(p[0] for p in bbox))
-            y_min = int(min(p[1] for p in bbox))
-            x_max = int(max(p[0] for p in bbox))
-            y_max = int(max(p[1] for p in bbox))
-            
-            self.entities.append({
-                "id": self.generate_id(),
-                "type": "text",
-                "label": text,
-                "bounding_box": {"x": x_min, "y": y_min, "w": x_max - x_min, "h": y_max - y_min},
-                "parent_id": None,
-                "children": []
-            })
+    def preprocess(self):
+        pass
 
-        # 2. Box/Group Detection
-        print("Detecting boxed regions...")
-        # Use different thresholds to find nested boxes
-        blur = cv2.GaussianBlur(self.gray, (5, 5), 0)
-        edged = cv2.Canny(blur, 50, 200)
-        contours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        
+    def detect_boxes(self):
+        edges = cv2.Canny(self.gray, 30, 120)
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        dilated = cv2.dilate(edges, kernel, iterations=2)
+        contours, _ = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        img_area = self.image.shape[0] * self.image.shape[1]
+        seen = set()
+
         for cnt in contours:
             peri = cv2.arcLength(cnt, True)
             approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
-            
-            if len(approx) == 4:
-                x, y, w, h = cv2.boundingRect(approx)
-                # Filter out too small or too large detections
-                if 40 < w < self.image.shape[1] * 0.98 and 40 < h < self.image.shape[0] * 0.98:
-                    # Check if it's already detected as a box (overlap)
-                    is_new = True
-                    for e in [ent for ent in self.entities if ent["type"] == "group"]:
-                        eb = e["bounding_box"]
-                        # If boxes are almost identical, skip
-                        if abs(x - eb["x"]) < 10 and abs(y - eb["y"]) < 10 and abs(w - eb["w"]) < 10:
-                            is_new = False
-                            break
-                    
-                    if is_new:
-                        self.entities.append({
-                            "id": self.generate_id(),
-                            "type": "group",
-                            "label": "Region", 
-                            "bounding_box": {"x": x, "y": y, "w": w, "h": h},
-                            "parent_id": None,
-                            "children": []
-                        })
+            x, y, w, h = cv2.boundingRect(cnt)
 
-    def associate(self):
-        print("Associating text/icons to groups...")
-        groups = [e for e in self.entities if e["type"] == "group"]
-        # Sort by area ascending so we find the "tightest" fit first
-        groups.sort(key=lambda x: x["bounding_box"]["w"] * x["bounding_box"]["h"])
-        
-        non_groups = [e for e in self.entities if e["type"] != "group"]
-        
-        for item in non_groups:
-            ix, iy = item["bounding_box"]["x"], item["bounding_box"]["y"]
-            iw, ih = item["bounding_box"]["w"], item["bounding_box"]["h"]
-            item_center = (ix + iw/2, iy + ih/2)
+            if len(approx) < 4: continue
+            if w * h < 1500: continue
+            if w * h > 0.85 * img_area: continue
+            if w < 30 or h < 20: continue
             
-            for g in groups:
-                gx, gy = g["bounding_box"]["x"], g["bounding_box"]["y"]
-                gw, gh = g["bounding_box"]["w"], g["bounding_box"]["h"]
+            key = (x//10, y//10, w//10, h//10)
+            if key in seen: continue
+            seen.add(key)
+
+            rect_area = w * h
+            contour_area = cv2.contourArea(cnt)
+            confidence = min(1.0, contour_area / rect_area if rect_area > 0 else 0)
+
+            bbox = BBox(x, y, w, h)
+            entity = Entity(
+                id=self.generate_id("group"),
+                type="group",
+                label="Region",
+                bbox=bbox,
+                confidence=float(confidence)
+            )
+            self.entities.append(entity)
+            self.id_map[entity.id] = entity
+
+    def extract_text(self):
+        results = self.reader.readtext(self.image)
+        for (bbox_pts, text, confidence) in results:
+            if confidence < 0.3: continue
+            x_min = int(min(p[0] for p in bbox_pts))
+            y_min = int(min(p[1] for p in bbox_pts))
+            x_max = int(max(p[0] for p in bbox_pts))
+            y_max = int(max(p[1] for p in bbox_pts))
+            
+            bbox = BBox(x_min, y_min, x_max - x_min, y_max - y_min)
+            entity = Entity(
+                id=self.generate_id("text"),
+                type="text",
+                label=text,
+                bbox=bbox,
+                confidence=float(confidence)
+            )
+            self.entities.append(entity)
+            self.id_map[entity.id] = entity
+
+    def merge_text_tokens(self, x_gap=60, y_gap=12):
+        text_entities = [e for e in self.entities if e.type == "text"]
+        if not text_entities: return
+
+        processed = set()
+        text_entities.sort(key=lambda e: (e.bbox.y, e.bbox.x))
+        new_entities = []
+
+        for i, e1 in enumerate(text_entities):
+            if e1.id in processed: continue
+            current_phrase = [e1]
+            processed.add(e1.id)
+            
+            changed = True
+            while changed:
+                changed = False
+                for j, e2 in enumerate(text_entities):
+                    if e2.id in processed: continue
+                    last_e = current_phrase[-1]
+                    avg_h = (last_e.bbox.h + e2.bbox.h) / 2
+                    if (abs(last_e.bbox.cy - e2.bbox.cy) < avg_h + y_gap and
+                        (e2.bbox.x - (last_e.bbox.x + last_e.bbox.w)) < x_gap and
+                        (e2.bbox.x - (last_e.bbox.x + last_e.bbox.w)) > -10):
+                        current_phrase.append(e2)
+                        processed.add(e2.id)
+                        changed = True
+                        break
+            
+            if len(current_phrase) > 1:
+                x_min = min(e.bbox.x for e in current_phrase)
+                y_min = min(e.bbox.y for e in current_phrase)
+                x_max = max(e.bbox.x + e.bbox.w for e in current_phrase)
+                y_max = max(e.bbox.y + e.bbox.h for e in current_phrase)
+                merged_label = " ".join(e.label for e in current_phrase)
+                avg_conf = sum(e.confidence for e in current_phrase) / len(current_phrase)
                 
-                if (gx <= item_center[0] <= gx + gw and 
-                    gy <= item_center[1] <= gy + gh):
-                    item["parent_id"] = g["id"]
-                    g["children"].append(item["id"])
-                    # If the group doesn't have a label yet and this text is likely its title
-                    # Titles are usually at the top of the box
-                    if item["type"] == "text" and (iy - gy) < 30:
-                        g["label"] = item["label"]
-                    break
+                merged_entity = Entity(
+                    id=self.generate_id("text_merged"),
+                    type="text",
+                    label=merged_label,
+                    bbox=BBox(x_min, y_min, x_max - x_min, y_max - y_min),
+                    confidence=avg_conf
+                )
+                new_entities.append(merged_entity)
+            else:
+                new_entities.append(e1)
 
-        # Associate groups to groups (nested)
-        for i, g_child in enumerate(groups):
-            cx, cy = g_child["bounding_box"]["x"], g_child["bounding_box"]["y"]
-            cw, ch = g_child["bounding_box"]["w"], g_child["bounding_box"]["h"]
-            child_center = (cx + cw/2, cy + ch/2)
-            
-            for j, g_parent in enumerate(groups):
-                if i == j: continue
-                px, py = g_parent["bounding_box"]["x"], g_parent["bounding_box"]["y"]
-                pw, ph = g_parent["bounding_box"]["w"], g_parent["bounding_box"]["h"]
-                
-                # Check containment
-                if (px < cx and py < cy and 
-                    px + pw > cx + cw and py + ph > cy + ch):
-                    # We found a parent; since groups are sorted by area, 
-                    # the first one we find moving up is the direct parent
-                    g_child["parent_id"] = g_parent["id"]
-                    g_parent["children"].append(g_child["id"])
-                    break
+        self.entities = [e for e in self.entities if e.type != "text"] + new_entities
+        self.id_map = {e.id: e for e in self.entities}
 
-    def detect_relationships(self):
-        print("Detecting relationships (Arrows)...")
-        # Isolate arrows: Threshold -> Filter out boxes/text regions
+    def detect_icons(self):
+        # Database cylinder detection
+        contours, _ = cv2.findContours(self.gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        for cnt in contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            ar = w / h if h > 0 else 0
+            if 0.3 <= ar <= 1.0 and 800 < w*h < 10000:
+                overlap = False
+                for e in self.entities:
+                    if e.bbox.contains(BBox(x, y, w, h)): 
+                        if e.type == "group": continue
+                        overlap = True
+                        break
+                if not overlap:
+                    icon = Entity(
+                        id=self.generate_id("icon"),
+                        type="icon",
+                        label="Database",
+                        bbox=BBox(x, y, w, h),
+                        confidence=0.75
+                    )
+                    self.entities.append(icon)
+                    self.id_map[icon.id] = icon
+
+    def detect_arrows(self):
         mask = np.ones(self.gray.shape, dtype="uint8") * 255
         for e in self.entities:
-            b = e["bounding_box"]
-            cv2.rectangle(mask, (b["x"]-2, b["y"]-2), (b["x"]+b["w"]+4, b["y"]+b["h"]+4), 0, -1)
+            b = e.bbox
+            cv2.rectangle(mask, (b.x - 2, b.y - 2), (b.x + b.w + 4, b.y + b.h + 4), 0, -1)
         
-        only_lines = cv2.bitwise_and(self.gray, self.gray, mask=mask)
-        _, binary = cv2.threshold(only_lines, 200, 255, cv2.THRESH_BINARY_INV)
-        
-        # Hough Lines for arrows
-        lines = cv2.HoughLinesP(binary, 1, np.pi/180, 20, minLineLength=30, maxLineGap=10)
+        clean_for_hough = cv2.bitwise_and(self.gray, self.gray, mask=mask)
+        edges = cv2.Canny(clean_for_hough, 30, 150)
+        lines = cv2.HoughLinesP(edges, 1, np.pi/180, 40, minLineLength=30, maxLineGap=15)
         
         if lines is not None:
+            _, binary = cv2.threshold(clean_for_hough, 200, 255, cv2.THRESH_BINARY_INV)
             for line in lines:
                 x1, y1, x2, y2 = line[0]
-                # Determine direction: Check which end is closer to a tip
-                # For simplified assignment, we'll link nodes closest to endpoints
+                style = self.classify_line_style(x1, y1, x2, y2, binary)
                 src_id = self.find_closest_entity(x1, y1)
                 dst_id = self.find_closest_entity(x2, y2)
                 
                 if src_id and dst_id and src_id != dst_id:
-                    self.relationships.append({
-                        "from": src_id,
-                        "to": dst_id,
-                        "direction": "unidirectional", # Default
-                        "style": "solid", # Default
-                        "label": None
-                    })
+                    rel = Relationship(from_id=src_id, to_id=dst_id, direction="unidirectional", style=style)
+                    self.relationships.append(rel)
+
+    def classify_line_style(self, x1, y1, x2, y2, binary_img) -> str:
+        length = math.hypot(x2 - x1, y2 - y1)
+        n_samples = max(int(length / 5), 1)
+        filled = 0
+        h, w = binary_img.shape
+        for k in range(n_samples):
+            t = k / max(n_samples - 1, 1)
+            px = int(x1 + t * (x2 - x1))
+            py = int(y1 + t * (y2 - y1))
+            if 0 <= py < h and 0 <= px < w:
+                if binary_img[py, px] > 0: filled += 1
+        fill_ratio = filled / n_samples
+        return "solid" if fill_ratio > 0.65 else "dashed"
 
     def find_closest_entity(self, x, y):
-        # Find small entities (not parent containers) near point
-        min_dist = 100
+        min_dist = 80
         best_id = None
         for e in self.entities:
-            # Skip large container boxes, focus on leaf nodes or small boxes
-            if e["type"] == "group" and e["bounding_box"]["w"] > self.image.shape[1] * 0.5:
-                continue
-            
-            bx = e["bounding_box"]["x"]
-            by = e["bounding_box"]["y"]
-            bw = e["bounding_box"]["w"]
-            bh = e["bounding_box"]["h"]
-            
-            # Distance from point to box boundary
-            dx = max(bx - x, 0, x - (bx + bw))
-            dy = max(by - y, 0, y - (by + bh))
-            dist = np.sqrt(dx**2 + dy**2)
-            
+            if e.bbox.w > self.image.shape[1] * 0.5: continue
+            dx = max(e.bbox.x - x, 0, x - (e.bbox.x + e.bbox.w))
+            dy = max(e.bbox.y - y, 0, y - (e.bbox.y + e.bbox.h))
+            dist = math.sqrt(dx**2 + dy**2)
             if dist < min_dist:
                 min_dist = dist
-                best_id = e["id"]
+                best_id = e.id
         return best_id
 
-    def run(self):
-        self.detect_entities()
-        self.associate()
-        self.detect_relationships()
-        
-        # Save Outputs
-        os.makedirs(self.output_dir, exist_ok=True)
-        
-        # JSON
-        with open(os.path.join(self.output_dir, "structure.json"), "w") as f:
-            json.dump({"entities": self.entities, "relationships": self.relationships}, f, indent=2)
-            
-        # Annotated Image
-        annotated = self.image.copy()
-        colors = {"text": (255, 0, 0), "group": (0, 255, 0), "icon": (0, 165, 255), "arrow": (0, 0, 255)}
+    def assign_hierarchy(self):
+        groups = [e for e in self.entities if e.type == "group"]
+        groups.sort(key=lambda g: g.bbox.area)
+
+        for child in groups:
+            for parent in groups:
+                if child.id == parent.id: continue
+                if parent.bbox.contains(child.bbox):
+                    child.parent_id = parent.id
+                    parent.children.append(child.id)
+                    break
+
+        leaves = [e for e in self.entities if e.type != "group"]
+        for leaf in leaves:
+            for group in groups:
+                if group.bbox.contains(leaf.bbox):
+                    leaf.parent_id = group.id
+                    group.children.append(leaf.id)
+                    if leaf.type == "text" and (leaf.bbox.y - group.bbox.y) < 30:
+                        if group.label == "Region": group.label = leaf.label
+                    break
+
+        img_w = self.image.shape[1]
         for e in self.entities:
-            b = e["bounding_box"]
-            cv2.rectangle(annotated, (b["x"], b["y"]), (b["x"]+b["w"], b["y"]+b["h"]), colors.get(e["type"], (255,255,255)), 2)
-            cv2.putText(annotated, f"{e['type']}: {e['label'][:15]}", (b["x"], b["y"]-5), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0,0,0), 1)
-        
-        # Draw relationships (simple lines for demo)
+            if e.type == "group" and e.parent_id is None:
+                if e.bbox.cx < img_w * 0.4: e.zone_hint = "cloud"
+                elif e.bbox.cx < img_w * 0.7: e.zone_hint = "onprem"
+                else: e.zone_hint = "external"
+
+    def extract_arrow_labels(self):
+        text_entities = [e for e in self.entities if e.type == "text"]
         for r in self.relationships:
-            src = next(e for e in self.entities if e["id"] == r["from"])
-            dst = next(e for e in self.entities if e["id"] == r["to"])
-            s_b = src["bounding_box"]
-            d_b = dst["bounding_box"]
-            cv2.line(annotated, (s_b["x"]+s_b["w"]//2, s_b["y"]+s_b["h"]//2), 
-                                (d_b["x"]+d_b["w"]//2, d_b["y"]+d_b["h"]//2), (0,0,255), 2)
-            
+            src, dst = self.id_map.get(r.from_id), self.id_map.get(r.to_id)
+            if not src or not dst: continue
+            mid_x, mid_y = (src.bbox.cx + dst.bbox.cx) // 2, (src.bbox.cy + dst.bbox.cy) // 2
+            for t in text_entities:
+                if abs(t.bbox.cx - mid_x) < 40 and abs(t.bbox.cy - mid_y) < 20:
+                    r.label = t.label
+                    break
+
+    def deduplicate_relationships(self):
+        seen, merged = {}, []
+        for r in self.relationships:
+            key_fwd, key_rev = (r.from_id, r.to_id), (r.to_id, r.from_id)
+            if key_rev in seen: seen[key_rev].direction = "bidirectional"
+            else:
+                seen[key_fwd] = r
+                merged.append(r)
+        self.relationships = merged
+
+    def export_json(self):
+        output = {
+            "entities": [],
+            "relationships": [],
+            "metadata": {
+                "image_width": self.image.shape[1],
+                "image_height": self.image.shape[0],
+                "total_entities": len(self.entities),
+                "total_relationships": len(self.relationships)
+            }
+        }
+        for e in self.entities:
+            output["entities"].append({
+                "id": e.id, "type": e.type, "label": e.label, "confidence": round(e.confidence, 2),
+                "bounding_box": e.bbox.to_dict(), "parent_id": e.parent_id, "children": e.children, "zone_hint": e.zone_hint
+            })
+        for r in self.relationships:
+            output["relationships"].append({
+                "from": r.from_id, "to": r.to_id, "direction": r.direction, "style": r.style, "label": r.label
+            })
+        with open(os.path.join(self.output_dir, "structure.json"), "w") as f:
+            json.dump(output, f, indent=2)
+
+    def draw_annotated_image(self):
+        annotated = self.image.copy()
+        colors = {"group": (94, 197, 34), "text": (246, 130, 59), "icon": (22, 115, 249)}
+        for e in sorted(self.entities, key=lambda x: x.bbox.area, reverse=True):
+            b = e.bbox
+            color = colors.get(e.type, (255, 255, 255))
+            cv2.rectangle(annotated, (b.x, b.y), (b.x + b.w, b.y + b.h), color, 2)
+            cv2.putText(annotated, e.label[:15], (b.x, b.y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
+
+        for r in self.relationships:
+            src, dst = self.id_map.get(r.from_id), self.id_map.get(r.to_id)
+            if src and dst:
+                cv2.arrowedLine(annotated, (src.bbox.cx, src.bbox.cy), (dst.bbox.cx, dst.bbox.cy), (0, 0, 255), 2)
         cv2.imwrite(os.path.join(self.output_dir, "annotated_diagram.png"), annotated)
-        print(f"Results saved to {self.output_dir}")
+
+    def build_graph(self):
+        self.G = nx.DiGraph()
+        for e in self.entities: self.G.add_node(e.id, label=e.label, zone=e.zone_hint)
+        for r in self.relationships:
+            self.G.add_edge(r.from_id, r.to_id, style=r.style, label=r.label or "")
+
+    def draw_graph_image(self):
+        plt.figure(figsize=(10, 7))
+        pos = nx.spring_layout(self.G)
+        nx.draw(self.G, pos, with_labels=True, labels={n: self.G.nodes[n]['label'][:10] for n in self.G.nodes}, 
+                node_size=1000, node_color='lightblue', font_size=8)
+        plt.savefig(os.path.join(self.output_dir, "relationship_graph.png"))
+        plt.close()
+
+    def run(self):
+        print("Starting Pipeline...")
+        self.detect_boxes()
+        self.extract_text()
+        self.merge_text_tokens()
+        self.detect_icons()
+        self.detect_arrows()
+        self.assign_hierarchy()
+        self.extract_arrow_labels()
+        self.deduplicate_relationships()
+        self.export_json()
+        self.draw_annotated_image()
+        self.build_graph()
+        self.draw_graph_image()
+        print(f"Done. Outputs in {self.output_dir}")
 
 if __name__ == "__main__":
-    analyzer = DiagramAnalyzer(r"c:\Users\Administrator\.gemini\antigravity\scratch\complianceai")
+    import sys
+    base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    input_path = os.path.join(base_path, "input", "diagram.png")
+    output_path = os.path.join(base_path, "output")
+    
+    if not os.path.exists(input_path):
+        print(f"Error: Input not found at {input_path}")
+        sys.exit(1)
+        
+    analyzer = DiagramAnalyzer(input_path, output_path)
     analyzer.run()
