@@ -37,6 +37,8 @@ pip install -r requirements.txt
     - `output/structure.json`: The fully structured logical graph.
     - `output/annotated_diagram.png`: Visualization of detected bounding boxes and relationships.
     - `output/relationship_graph.png`: NetworkX-generated topological visualization.
+<img width="1248" height="400" alt="image" src="https://github.com/user-attachments/assets/05904f3c-0c4c-488c-adb6-98dc26880863" />
+
 
 ## 📁 Project Structure
 - `src/processor.py`: Unified production pipeline.
